@@ -49,11 +49,11 @@
                   "key": "file",
                   "type": "file",
                   "src": [],
-                  "description": "Select your CSV file (e.g. inventory_10000.csv from src/main/resources/benchmark/)"
+                  "description": "Select your CSV file (e.g. sample_data/inputs/sample_valid_5.csv or inventory_10000.csv)"
                 }
               ]
             },
-            "description": "Upload a CSV file for parallel concurrent processing. Select the file manually in Postman's Body > form-data tab.\n\nExpected CSV headers: sku, name, category, quantity, price, warehouse_location, supplier_id, last_updated"
+            "description": "Upload a CSV file for parallel concurrent processing. Select the file manually in Postman's Body > form-data tab.\n\nExpected CSV headers: code,name,batch_number,quantity,price,expiry_date"
           },
           "response": []
         },
@@ -80,7 +80,7 @@
                   "key": "file",
                   "type": "file",
                   "src": [],
-                  "description": "Select your CSV file (e.g. inventory_10000.csv from src/main/resources/benchmark/)"
+                  "description": "Select your CSV file (e.g. sample_data/inputs/sample_valid_5.csv or inventory_10000.csv)"
                 }
               ]
             },
@@ -108,7 +108,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/jobs/{{jobId}}/errors?page=0&size=50&sort=RowNumber,asc",
+              "raw": "{{baseUrl}}/api/v1/jobs/{{jobId}}/errors?page=0&size=50&sort=csvRowNumber,asc",
               "host": ["{{baseUrl}}"],
               "path": ["api", "v1", "jobs", "{{jobId}}", "errors"],
               "query": [
@@ -141,14 +141,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/inventory?query=electronics&page=0&size=20&sort=name,asc",
+              "raw": "{{baseUrl}}/api/v1/inventory?query=Paracetamol&page=0&size=20&sort=name,asc",
               "host": ["{{baseUrl}}"],
               "path": ["api", "v1", "inventory"],
               "query": [
                 {
                   "key": "query",
-                  "value": "electronics",
-                  "description": "Search term — matches name, category, sku, or warehouse_location"
+                  "value": "Paracetamol",
+                  "description": "Search term — matches code, name, or batchNumber"
                 },
                 {
                   "key": "page",
@@ -165,7 +165,7 @@
                 }
               ]
             },
-            "description": "Search inventory items with pagination and sorting. The 'query' parameter does a full-text search across name, category, sku, and warehouse_location fields."
+            "description": "Search inventory items with pagination and sorting. The 'query' parameter searches across code, name, and batchNumber fields."
           },
           "response": []
         },
@@ -200,14 +200,14 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"sku\": \"SKU-TEST-001\",\n  \"name\": \"Test Product Alpha\",\n  \"category\": \"Electronics\",\n  \"quantity\": 150,\n  \"price\": 29.99,\n  \"warehouseLocation\": \"A1-01\",\n  \"supplierId\": \"SUP-001\",\n  \"lastUpdated\": \"2025-01-15T10:30:00\"\n}",
+              "raw": "{\n  \"code\": \"MED-TEST-001\",\n  \"name\": \"Paracetamol 500mg Test\",\n  \"batchNumber\": \"BATCH-TEST-01\",\n  \"quantity\": 150,\n  \"price\": 12.50,\n  \"expiryDate\": \"2027-12-31\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Create a new inventory item. SKU must be unique.\n\nRequired fields: sku, name, category, quantity (≥0), price (≥0)\nOptional fields: warehouseLocation, supplierId, lastUpdated"
+            "description": "Create a new inventory item. Composite (code, batchNumber) must be unique.\n\nRequired fields: code, name, batchNumber, quantity (≥ 0), price (> 0, max 2 decimals), expiryDate (YYYY-MM-DD)"
           },
           "response": []
         },
@@ -228,7 +228,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"sku\": \"SKU-TEST-001\",\n  \"name\": \"Test Product Alpha - Updated\",\n  \"category\": \"Electronics\",\n  \"quantity\": 200,\n  \"price\": 34.99,\n  \"warehouseLocation\": \"A1-02\",\n  \"supplierId\": \"SUP-001\",\n  \"lastUpdated\": \"2025-01-16T09:00:00\"\n}",
+              "raw": "{\n  \"code\": \"MED-TEST-001\",\n  \"name\": \"Paracetamol 500mg Extra\",\n  \"batchNumber\": \"BATCH-TEST-01\",\n  \"quantity\": 200,\n  \"price\": 14.00,\n  \"expiryDate\": \"2028-06-30\"\n}",
               "options": {
                 "raw": {
                   "language": "json"

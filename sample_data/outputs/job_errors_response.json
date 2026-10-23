@@ -1,0 +1,80 @@
+{
+  "content": [
+    {
+      "id": 1,
+      "jobId": 1,
+      "rowNumber": 3,
+      "rawRecord": "MED-00002,,BATCH-2002,50,25.00,2027-11-15",
+      "errorMessage": "name: name is mandatory and cannot be blank",
+      "createdAt": "2026-10-23T16:03:10.120"
+    },
+    {
+      "id": 2,
+      "jobId": 1,
+      "rowNumber": 4,
+      "rawRecord": "MED-00003,Ibuprofen 400mg,BATCH-2003,-15,18.00,2028-01-20",
+      "errorMessage": "quantity: quantity must be greater than or equal to 0",
+      "createdAt": "2026-10-23T16:03:10.122"
+    },
+    {
+      "id": 3,
+      "jobId": 1,
+      "rowNumber": 5,
+      "rawRecord": "MED-00004,Aspirin 100mg,BATCH-2004,200,-5.50,2028-09-10",
+      "errorMessage": "price: price must be greater than 0",
+      "createdAt": "2026-10-23T16:03:10.124"
+    },
+    {
+      "id": 4,
+      "jobId": 1,
+      "rowNumber": 6,
+      "rawRecord": "MED-00005,Cetirizine 10mg,BATCH-2005,150,15.999,2029-03-31",
+      "errorMessage": "price: price cannot exceed 2 decimal places",
+      "createdAt": "2026-10-23T16:03:10.126"
+    },
+    {
+      "id": 5,
+      "jobId": 1,
+      "rowNumber": 7,
+      "rawRecord": "MED-00006,Metformin 500mg,BATCH-2006,300,8.75,invalid-date-format",
+      "errorMessage": "expiry_date: invalid date format 'invalid-date-format'. Expected formats: yyyy-MM-dd, dd/MM/yyyy, MM/dd/yyyy, yyyy/MM/dd, dd-MM-yyyy",
+      "createdAt": "2026-10-23T16:03:10.128"
+    },
+    {
+      "id": 6,
+      "jobId": 1,
+      "rowNumber": 9,
+      "rawRecord": "MED-00001,Paracetamol 500mg,BATCH-2001,120,12.50,2028-06-30",
+      "errorMessage": "Duplicate record detected in CSV: code=MED-00001, batch=BATCH-2001 (already present earlier in this dataset)",
+      "createdAt": "2026-10-23T16:03:10.130"
+    },
+    {
+      "id": 7,
+      "jobId": 1,
+      "rowNumber": 10,
+      "rawRecord": ",Atorvastatin 10mg,BATCH-2009,180,30.00,2027-12-31",
+      "errorMessage": "code: code is mandatory and cannot be blank",
+      "createdAt": "2026-10-23T16:03:10.132"
+    }
+  ],
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 50,
+    "sort": {
+      "sorted": true,
+      "unsorted": false,
+      "empty": false
+    },
+    "offset": 0,
+    "paged": true,
+    "unpaged": false
+  },
+  "totalElements": 7,
+  "totalPages": 1,
+  "last": true,
+  "first": true,
+  "size": 50,
+  "number": 0,
+  "numberOfElements": 7,
+  "empty": false
+}

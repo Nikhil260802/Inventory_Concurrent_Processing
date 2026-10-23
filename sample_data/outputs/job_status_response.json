@@ -1,0 +1,16 @@
+{
+  "jobId": 1,
+  "fileName": "inventory_10000.csv",
+  "processingMode": "PARALLEL",
+  "status": "COMPLETED",
+  "startedAt": "2026-10-23T16:03:09.832",
+  "finishedAt": "2026-10-23T16:03:10.525",
+  "totalRecords": 10000,
+  "successfulRecords": 7941,
+  "failedRecords": 610,
+  "duplicateRecords": 1449,
+  "executionTimeMs": 681,
+  "throughputRecordsPerSec": 14684.29,
+  "peakMemoryMb": 39.10,
+  "errorMessage": null
+}

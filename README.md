@@ -84,38 +84,51 @@ A robust, high-performance Spring Boot backend engineered to stream, validate, d
 
 ---
 
-## 4. Database Setup & Flyway Migration
+## 4. Database Setup
 
 Create the database in your local MySQL instance:
 ```sql
 CREATE DATABASE IF NOT EXISTS inventory_db;
 ```
 
-Update your database credentials in [`src/main/resources/application.properties`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/src/main/resources/application.properties):
+Configure your database credentials in [`src/main/resources/application.properties`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/src/main/resources/application.properties):
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/inventory_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
 spring.datasource.username=root
 spring.datasource.password=YOUR_PASSWORD
+spring.jpa.hibernate.ddl-auto=update
 ```
 
-When the application boots, Flyway automatically runs [`V1__init_schema.sql`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/src/main/resources/db/migration/V1__init_schema.sql) creating:
-* `inventory`: Core inventory table with `UNIQUE KEY uq_inventory_code_batch (code, batch_number)` and search indexes.
+When the application boots, Hibernate automatically creates and verifies all required tables, constraints, and indexes:
+* `inventory`: Core inventory table with `UNIQUE KEY (code, batch_number)` and search indexes.
 * `processing_job`: Tracks file name, execution strategy, timing, throughput, peak memory, and record counters.
-* `processing_error`: Stores per-row error messages, raw record text, and 1-based CSV line numbers.
+* `processing_error`: Stores per-row error messages, raw record text, and 1-based CSV line numbers (`csv_row_number`).
+
+*(Note: The standalone DDL migration script is also provided at [`V1__init_schema.sql`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/src/main/resources/db/migration/V1__init_schema.sql) for reference).*
 
 ---
 
 ## 5. How to Run
 
 ### Run the Spring Boot Application
+**Windows (PowerShell/CMD):**
 ```powershell
 .\mvnw.cmd spring-boot:run
+```
+**Linux / macOS:**
+```bash
+./mvnw spring-boot:run
 ```
 The server will start on port `8080`.
 
 ### Run the Full Test Suite
+**Windows (PowerShell/CMD):**
 ```powershell
 .\mvnw.cmd test
+```
+**Linux / macOS:**
+```bash
+./mvnw test
 ```
 Executes all **28 automated tests** covering parsers, validators, duplicate detectors, CRUD services, REST controllers, and concurrent benchmarks.
 
@@ -230,10 +243,25 @@ curl -X DELETE "http://localhost:8080/api/v1/inventory/1"
 
 ## 8. Artifacts & Deliverables Directory
 
-| File | Description |
+| File / Directory | Description |
 | :--- | :--- |
+| [`AI_DISCLOSURE.md`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/PROJECT_DISCLOSURE.md) | **Required Disclosure:** Detailed report of AI tools used, usage level (High/Med/Low), actual time spent (~8.5h), and external assistance |
+| [`sample_data/`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/sample_data) | Standalone sample input CSVs (clean & error-injected) and corresponding sample output JSON responses |
 | [`BENCHMARK_REPORT.md`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/BENCHMARK_REPORT.md) | Technical report containing benchmark graphs, execution statistics, and concurrency analysis |
 | [`API_DOCUMENTATION.md`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/API_DOCUMENTATION.md) | Complete REST API contract and endpoint guide |
-| [`postman_collection.json`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/postman_collection.json) | Postman collection ready for one-click import and execution |
+| [`postman_collection.json`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/postman_collection.json) | Postman collection (v2.1.0) ready for one-click import and execution |
 | [`inventory_10000.csv`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/src/main/resources/benchmark/inventory_10000.csv) | Reproducible 10,000-record dataset used for benchmark evaluations |
-| [`V1__init_schema.sql`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/src/main/resources/db/migration/V1__init_schema.sql) | Flyway SQL migration script creating tables, constraints, and indexes |
+| [`V1__init_schema.sql`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/src/main/resources/db/migration/V1__init_schema.sql) | DDL schema script defining tables, unique composite constraints, and indexes |
+
+---
+
+## 9. Project Disclosure (Summary)
+
+For the full detailed breakdown, see [`AI_DISCLOSURE.md`](file:///d:/Vector%20Labs/Inventory_Concurrent_Processing/PROJECT_DISCLOSURE.md).
+
+* **AI Tools Disclosed:**
+  * **Claude 3.7 Sonnet** (High): Multi-threaded concurrency architecture (`ThreadPoolExecutor`), streaming parser design, entity/DTO modeling, and unit test suites.
+  * **Google Gemini** (Medium): MySQL 8.0 reserved keyword compatibility (`csv_row_number`), Hibernate batch optimization, and Postman v2.1.0 schema compliance.
+  * **GitHub Copilot** (Low): In-editor code autocompletion.
+* **Actual Time Spent:** ~8.5 hours across 7 phases (Architecture, Parser, Validation, Concurrency, Batch Persistence, REST APIs, and Benchmarks/Docs).
+* **External Assistance:** None. All work was developed independently using official documentation and the disclosed AI tools.
