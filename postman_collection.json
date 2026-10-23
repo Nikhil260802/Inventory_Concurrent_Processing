@@ -108,7 +108,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/v1/jobs/{{jobId}}/errors?page=0&size=50&sort=csvRowNumber,asc",
+              "raw": "{{baseUrl}}/api/v1/jobs/{{jobId}}/errors?page=0&size=50&sort=RowNumber,asc",
               "host": ["{{baseUrl}}"],
               "path": ["api", "v1", "jobs", "{{jobId}}", "errors"],
               "query": [
