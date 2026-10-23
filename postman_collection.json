@@ -1,0 +1,259 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Inventory Concurrent Processing API",
+    "description": "Complete API collection for the Inventory Concurrent Processing backend. Includes CSV job upload (parallel & sequential), job status, error inspection, and full inventory CRUD + search.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "jobId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "inventoryId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "CSV Processing & Jobs",
+      "item": [
+        {
+          "name": "Upload CSV - PARALLEL",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/jobs/upload?mode=PARALLEL",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "jobs", "upload"],
+              "query": [
+                {
+                  "key": "mode",
+                  "value": "PARALLEL"
+                }
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [],
+                  "description": "Select your CSV file (e.g. inventory_10000.csv from src/main/resources/benchmark/)"
+                }
+              ]
+            },
+            "description": "Upload a CSV file for parallel concurrent processing. Select the file manually in Postman's Body > form-data tab.\n\nExpected CSV headers: sku, name, category, quantity, price, warehouse_location, supplier_id, last_updated"
+          },
+          "response": []
+        },
+        {
+          "name": "Upload CSV - SEQUENTIAL",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/jobs/upload?mode=SEQUENTIAL",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "jobs", "upload"],
+              "query": [
+                {
+                  "key": "mode",
+                  "value": "SEQUENTIAL"
+                }
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [],
+                  "description": "Select your CSV file (e.g. inventory_10000.csv from src/main/resources/benchmark/)"
+                }
+              ]
+            },
+            "description": "Upload a CSV file for sequential (single-threaded) processing. Used for benchmarking comparison against PARALLEL mode."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Job Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/jobs/{{jobId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "jobs", "{{jobId}}"]
+            },
+            "description": "Get the full status and metrics for a processing job by its ID.\n\nReturns: jobId, status (PENDING/RUNNING/COMPLETED/FAILED), totalRecords, successfulRecords, failedRecords, duplicateRecords, executionTimeMs, throughputRecordsPerSec, peakMemoryMb, processingMode."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Job Errors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/jobs/{{jobId}}/errors?page=0&size=50&sort=RowNumber,asc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "jobs", "{{jobId}}", "errors"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "50"
+                },
+                {
+                  "key": "sort",
+                  "value": "csvRowNumber,asc"
+                }
+              ]
+            },
+            "description": "Retrieve paginated error records for a processing job. Shows which CSV rows failed and why."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Inventory Management & Search",
+      "item": [
+        {
+          "name": "Search Inventory",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/inventory?query=electronics&page=0&size=20&sort=name,asc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "inventory"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "electronics",
+                  "description": "Search term — matches name, category, sku, or warehouse_location"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "name,asc",
+                  "description": "Sort field and direction. Options: name,asc | price,desc | quantity,asc | etc."
+                }
+              ]
+            },
+            "description": "Search inventory items with pagination and sorting. The 'query' parameter does a full-text search across name, category, sku, and warehouse_location fields."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Inventory Item by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/inventory/{{inventoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "inventory", "{{inventoryId}}"]
+            },
+            "description": "Retrieve a single inventory item by its database ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Inventory Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/inventory",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "inventory"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"SKU-TEST-001\",\n  \"name\": \"Test Product Alpha\",\n  \"category\": \"Electronics\",\n  \"quantity\": 150,\n  \"price\": 29.99,\n  \"warehouseLocation\": \"A1-01\",\n  \"supplierId\": \"SUP-001\",\n  \"lastUpdated\": \"2025-01-15T10:30:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Create a new inventory item. SKU must be unique.\n\nRequired fields: sku, name, category, quantity (≥0), price (≥0)\nOptional fields: warehouseLocation, supplierId, lastUpdated"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Inventory Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/inventory/{{inventoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "inventory", "{{inventoryId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"SKU-TEST-001\",\n  \"name\": \"Test Product Alpha - Updated\",\n  \"category\": \"Electronics\",\n  \"quantity\": 200,\n  \"price\": 34.99,\n  \"warehouseLocation\": \"A1-02\",\n  \"supplierId\": \"SUP-001\",\n  \"lastUpdated\": \"2025-01-16T09:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Update an existing inventory item by ID. All fields are replaced (full update / PUT semantics)."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Inventory Item",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/inventory/{{inventoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "inventory", "{{inventoryId}}"]
+            },
+            "description": "Permanently delete an inventory item by its ID. Returns 204 No Content on success."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
